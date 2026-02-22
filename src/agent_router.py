@@ -102,27 +102,47 @@ def action_node(state: AgentState):
     return {"messages": tool_outputs}
 
 def summary_node(state: AgentState):
-    """Compiles findings into the professional multi-parameter Audit JSON format."""
-    print(f"\n[NODE] Compiling Professional Audit Report...")
+    """
+    Final node that compiles all federated evidence into a 
+    STRICT professional audit JSON format.
+    """
+    print(f"\n[NODE] Compiling Strict Professional Audit Report...")
     
+    # This prompt contains the exact template the model MUST follow.
     prompt = f"""
-    Generate a professional sustainability audit for {state['brand_name']} in the following JSON format.
+    Generate a professional sustainability audit for {state['brand_name']} in the EXACT JSON format provided below. 
+    Do not add or remove keys.
     
-    STRICT JSON STRUCTURE:
+    REQUIRED JSON TEMPLATE:
     {{
       "brandName": "{state['brand_name']}",
+      "url": "extracted_url_here",
       "sustainabilityScore": 0-100,
       "scoreBreakdown": [
-        {{"parameter": "Materials & Sourcing", "score": 0-25, "maxScore": 25, "color": "#4CAF50"}},
-        {{"parameter": "Certifications", "score": 0-20, "maxScore": 20, "color": "#2196F3"}},
-        {{"parameter": "Carbon & Energy", "score": 0-20, "maxScore": 20, "color": "#FF9800"}},
-        {{"parameter": "Waste & Packaging", "score": 0-15, "maxScore": 15, "color": "#9C7A4D"}},
-        {{"parameter": "Supply Chain Ethics", "score": 0-10, "maxScore": 10, "color": "#E57373"}},
-        {{"parameter": "Transparency & Reporting", "score": 0-10, "maxScore": 10, "color": "#7E57C2"}}
+        {{"parameter": "Materials & Sourcing", "score": 0, "maxScore": 25, "color": "#4CAF50"}},
+        {{"parameter": "Certifications", "score": 0, "maxScore": 20, "color": "#2196F3"}},
+        {{"parameter": "Carbon & Energy", "score": 0, "maxScore": 20, "color": "#FF9800"}},
+        {{"parameter": "Waste & Packaging", "score": 0, "maxScore": 15, "color": "#9C7A4D"}},
+        {{"parameter": "Supply Chain Ethics", "score": 0, "maxScore": 10, "color": "#E57373"}},
+        {{"parameter": "Transparency & Reporting", "score": 0, "maxScore": 10, "color": "#7E57C2"}}
       ],
-      "claims": [],
-      "certifications": [],
-      "redFlags": [],
+      "claims": [
+        {{
+          "claim": "Claim text found",
+          "status": "verified/unverified/misleading",
+          "source": "GOTS/B-Corp/Self-declared",
+          "detail": "Short justification"
+        }}
+      ],
+      "certifications": [
+        {{ "name": "GOTS (Organic Textile)", "found": true/false, "database": "global-standard.org" }},
+        {{ "name": "FSC (Forest Stewardship)", "found": true/false, "database": "fsc.org" }},
+        {{ "name": "B Corp Certification", "found": true/false, "database": "bcorporation.net" }},
+        {{ "name": "Leaping Bunny (Cruelty-Free)", "found": true/false, "database": "leapingbunny.org" }}
+      ],
+      "redFlags": [
+        {{ "title": "Issue Title", "description": "Details", "severity": "high/medium/low" }}
+      ],
       "recommendation": {{
         "verdict": "Verified/Conditional/Flagged",
         "score": 0-100,
@@ -130,21 +150,24 @@ def summary_node(state: AgentState):
         "summary": ""
       }}
     }}
-    
-    RULES:
-    - Base scores on actual 'MATCH FOUND' results in chat. 
-    - Mark claims 'verified' only if a Registry Tool confirmed them.
-    - Return ONLY the raw JSON.
+
+    INSTRUCTIONS:
+    1. Mapping: Use the chat history to fill found/not found for certifications.
+    2. Scoring: Calculate the score based on the evidence found in SQL/Web tools.
+    3. Output: Return ONLY the raw JSON. No markdown, no intro.
     """
     
     response = ChatGroq(model="llama-3.1-8b-instant", temperature=0).invoke(
         state["messages"] + [HumanMessage(content=prompt)]
     )
     
-    # Surgical Regex Cleaner to prevent 'Extra Data' errors
+    # SURGICAL REGEX: This ensures if the AI adds "Here is the JSON", we cut it out.
     match = re.search(r'\{.*\}', response.content, re.DOTALL)
-    clean_json = match.group(0) if match else "{}"
-    
+    if not match:
+        # Fallback if AI fails completely
+        return {"final_audit": json.dumps({"error": "Failed to generate strict JSON"})}
+        
+    clean_json = match.group(0)
     return {"final_audit": clean_json}
 
 # ---------------------------------------------------------
