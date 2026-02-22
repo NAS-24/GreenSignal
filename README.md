@@ -1,38 +1,38 @@
-🌿 Green Signal AI: Agentic Sustainability Auditor
-Green Signal is a high-performance, Agentic AI system designed to dismantle "Greenwashing" in the D2C (Direct-to-Consumer) industry. By utilizing a multi-agent workflow, it transforms vague marketing claims into verifiable, quantitative trust scores.
+# 🌿 Green Signal AI: Agentic Sustainability Auditor
 
-🚀 The Core Problem
-Most consumers are overwhelmed by buzzwords like "eco-friendly" or "natural." Current solutions are either manual or rely on simple AI summarization of a brand’s own marketing. Green Signal solves this by acting as an independent, third-party auditor that treats every claim as "unverified" until proven against official registries.
+**Green Signal** is a high-performance, Agentic AI auditing system designed to combat greenwashing in the Direct-to-Consumer (D2C) industry. Instead of trusting marketing language, the system independently verifies sustainability claims and converts them into quantifiable trust scores backed by evidence.
 
-🧠 System Architecture & Flow
-Unlike linear pipelines, Green Signal uses an Agentic Reasoning-Action (ReAct) Loop.
+## 🚀 The Core Problem
+Modern consumers are flooded with vague sustainability buzzwords such as "eco-friendly," "natural," and "sustainable." Current solutions suffer from major limitations:
+* **Manual verification** is slow and impractical.
+* **Most AI tools** only summarize brand marketing content.
+* **Claims are rarely validated** against official certification bodies.
 
-Surgical Extraction: A specialized scraper bypasses anti-bot layers to pull raw product text.
+Green Signal solves this by acting as an independent third-party AI auditor, treating every sustainability claim as unverified until proven using trusted registries and verified sources.
 
-Claim Categorization: Llama 3.1 8B identifies and categorizes specific sustainability claims (e.g., GOTS, B-Corp).
+## 🧠 System Architecture & Workflow
+Green Signal operates using an **Agentic Reasoning-Action (ReAct) Loop**, enabling dynamic decision-making instead of a fixed pipeline.
 
-Federated Verification: The agent prioritizes "Silos of Truth"—local SQL registries of official bodies—before falling back to live web searches via Tavily.
+1. **Surgical Data Extraction:** Specialized scraper bypasses anti-bot protections. Extracts raw product and brand sustainability content.
+2. **Claim Categorization:** Llama 3.1 8B identifies and classifies sustainability claims (e.g., GOTS Certified, B-Corp, Carbon Neutral).
+3. **Federated Verification:** Agent prioritizes trusted internal databases (**"Silos of Truth"**): Local SQLite registries of official certification bodies. Falls back to live verification using Tavily Search API when needed.
+4. **Trust Scoring Engine:** Weighted evaluation model generates a 0–100 sustainability trust score across six verification parameters.
 
-Trust Scoring: A weighted engine calculates a score (0–100) across six key parameters.
+## ✨ Key Features
+* **Agentic Reasoning:** Powered by LangGraph, allowing autonomous decision-making and state management.
+* **Self-Healing Workflow:** If scraping fails, the agent extracts brand identity and dynamically switches research strategies.
+* **Greenwashing Detection:** Cross-checks marketing claims with certification IDs and registry status. Flags misleading or unverifiable claims.
+* **Professional Audit Output:** Generates structured, industry-ready JSON audit reports for seamless frontend integration.
 
-✨ Key Features
-Agentic Reasoning: Uses LangGraph to manage state and allow the agent to autonomously decide when it has enough evidence to conclude an audit.
+## 🛠️ Tech Stack
+| Component | Technology |
+| :--- | :--- |
+| **AI Model (Brain)** | Llama 3.1 8B (Groq LPU – low latency inference) |
+| **Orchestration** | LangGraph, FastAPI |
+| **Data Tools** | Tavily Search API, ScraperAPI, BeautifulSoup4 |
+| **Database** | SQLite (Federated Sustainability Registries) |
+| **Deployment (Backend)** | Render (FastAPI + Uvicorn) |
+| **Frontend** | Vercel |
 
-Self-Healing Logic: If a scraper is blocked, the agent autonomously extracts the brand from the URL and pivots its research strategy.
-
-Greenwashing Detection: Identifies "Red Flags" by cross-referencing claims with actual license IDs and certificate status.
-
-Professional Output: Delivers a strict, industry-standard JSON audit report ready for any frontend integration.
-
-🛠️ Tech Stack
-Brain: Llama 3.1 8B (via Groq LPU for low-latency inference).
-
-Orchestration: LangGraph & FastAPI.
-
-Tools: Tavily Search API, ScraperAPI, BeautifulSoup4.
-
-Vercel:- https://green-signal-five.vercel.app/
-
-Database: SQLite (Federated Sustainability Registries).
-
-Deployment: Render (Uvicorn/FastAPI).
+## 🌐 Live Demo
+🔗 [https://green-signal-five.vercel.app/](https://green-signal-five.vercel.app/)
