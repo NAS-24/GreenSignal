@@ -1,0 +1,59 @@
+{
+    "brandName": "Www",
+    "sustainabilityScore": 0,
+    "scoreBreakdown": [
+        {
+            "parameter": "Materials & Sourcing",
+            "score": 0,
+            "maxScore": 25,
+            "color": "#4CAF50"
+        },
+        {
+            "parameter": "Certifications",
+            "score": 0,
+            "maxScore": 20,
+            "color": "#2196F3"
+        },
+        {
+            "parameter": "Carbon & Energy",
+            "score": 0,
+            "maxScore": 20,
+            "color": "#FF9800"
+        },
+        {
+            "parameter": "Waste & Packaging",
+            "score": 0,
+            "maxScore": 15,
+            "color": "#9C7A4D"
+        },
+        {
+            "parameter": "Supply Chain Ethics",
+            "score": 0,
+            "maxScore": 10,
+            "color": "#E57373"
+        },
+        {
+            "parameter": "Transparency & Reporting",
+            "score": 0,
+            "maxScore": 10,
+            "color": "#7E57C2"
+        }
+    ],
+    "claims": [
+        {
+            "category": "FSC_PACKAGING",
+            "claim_snippet": "Made in a Fair Trade Certified\u2122 factory",
+            "verified": false
+        }
+    ],
+    "certifications": [],
+    "redFlags": [],
+    "recommendation": {
+        "verdict": "Flagged",
+        "score": 0,
+        "reasons": [
+            "Multiple identical claims found, no evidence of Fair Trade certification"
+        ],
+        "summary": "Further investigation is required to verify the claims made by Www."
+    }
+}

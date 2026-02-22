@@ -1,0 +1,90 @@
+{
+    "brandName": "No Nasties",
+    "sustainabilityScore": 80,
+    "scoreBreakdown": [
+        {
+            "parameter": "Materials & Sourcing",
+            "score": 20,
+            "maxScore": 25,
+            "color": "#4CAF50"
+        },
+        {
+            "parameter": "Certifications",
+            "score": 15,
+            "maxScore": 20,
+            "color": "#2196F3"
+        },
+        {
+            "parameter": "Carbon & Energy",
+            "score": 10,
+            "maxScore": 20,
+            "color": "#FF9800"
+        },
+        {
+            "parameter": "Waste & Packaging",
+            "score": 10,
+            "maxScore": 15,
+            "color": "#9C7A4D"
+        },
+        {
+            "parameter": "Supply Chain Ethics",
+            "score": 5,
+            "maxScore": 10,
+            "color": "#E57373"
+        },
+        {
+            "parameter": "Transparency & Reporting",
+            "score": 5,
+            "maxScore": 10,
+            "color": "#7E57C2"
+        }
+    ],
+    "claims": [
+        {
+            "category": "GOTS_ORGANIC",
+            "claim_snippet": "100% Organic Cotton",
+            "verified": true
+        },
+        {
+            "category": "VEGAN_PETA",
+            "claim_snippet": "Organic and Vegan",
+            "verified": true
+        },
+        {
+            "category": "B-CORP",
+            "claim_snippet": "No Nasties Pvt Ltd",
+            "verified": false
+        },
+        {
+            "category": "FSC_PACKAGING",
+            "claim_snippet": "Plastic Free Packaging",
+            "verified": true
+        },
+        {
+            "category": "FSC_PACKAGING",
+            "claim_snippet": "Carbon Neutral Shipping",
+            "verified": true
+        },
+        {
+            "category": "FSC_PACKAGING",
+            "claim_snippet": "Carbon-neutral shipping",
+            "verified": true
+        },
+        {
+            "category": "FSC_PACKAGING",
+            "claim_snippet": "Plastic-free packaging",
+            "verified": true
+        }
+    ],
+    "certifications": [],
+    "redFlags": [],
+    "recommendation": {
+        "verdict": "Verified",
+        "score": 80,
+        "reasons": [
+            "No major red flags found during the audit.",
+            "Most claims were verified through the Registry Tool."
+        ],
+        "summary": "No Nasties has demonstrated a strong commitment to sustainability, with a focus on organic materials, vegan practices, and environmentally friendly packaging."
+    }
+}
