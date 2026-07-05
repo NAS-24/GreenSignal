@@ -3,7 +3,11 @@ import json
 
 def _extract_first_json(text: str) -> str:
     """Return the first balanced JSON object or array from text.
-    Scans for first '{' or '[' and returns substring up to matching closing brace/bracket.
+    Scans for the first '{' or '[' and returns the substring up to its
+    matching closing brace/bracket, correctly handling:
+      - nested mixes of {} and [] (e.g. a list containing objects)
+      - braces/brackets that appear inside quoted string values
+        (e.g. a claim snippet like "Materials {sourced} locally")
     Raises ValueError if no balanced JSON found.
     """
     if not text:
@@ -14,26 +18,37 @@ def _extract_first_json(text: str) -> str:
     for i, ch in enumerate(text):
         if ch in '{[':
             start_idx = i
-            start_ch = ch
             break
     if start_idx is None:
         raise ValueError("No JSON object/array found in AI output")
 
-    # select matching end
-    stack = []
     pairs = {'{': '}', '[': ']'}
+    stack = []  # stack of expected closing characters, in nesting order
+    in_string = False
+    escape_next = False
+
     for i in range(start_idx, len(text)):
         ch = text[i]
-        if ch == start_ch:
-            stack.append(ch)
+
+        if in_string:
+            if escape_next:
+                escape_next = False
+            elif ch == '\\':
+                escape_next = True
+            elif ch == '"':
+                in_string = False
+            continue
+
+        if ch == '"':
+            in_string = True
+        elif ch in pairs:
+            stack.append(pairs[ch])
         elif ch in pairs.values():
-            if not stack:
-                # unmatched closing
+            if not stack or stack[-1] != ch:
                 raise ValueError("Unbalanced JSON in AI output")
-            # pop corresponding opener
             stack.pop()
             if not stack:
-                return text[start_idx:i+1]
+                return text[start_idx:i + 1]
 
     raise ValueError("Unterminated JSON in AI output")
 

@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain_core.messages import SystemMessage, HumanMessage
 
+from src.utils import extract_brand_from_url
+
 load_dotenv()
 
 # Initialize LLM for claim classification
@@ -41,7 +43,7 @@ def extract_text_with_surgeon(html_content: str, url: str):
     
     # Improved Brand Extraction
     meta_brand = soup.find("meta", property="og:site_name")
-    brand_name = meta_brand["content"] if meta_brand else url.split("//")[-1].split(".")[0].replace("www.", "").capitalize()
+    brand_name = meta_brand["content"] if meta_brand else extract_brand_from_url(url)
 
     for element in soup(["script", "style", "noscript", "svg", "form", "nav", "header", "footer", "button", "aside"]):
         element.decompose()
@@ -120,7 +122,7 @@ def run_extraction_pipeline(url: str):
     
     # Verify the structure to prevent "KeyError" or "Unpacking" errors in the router
     if isinstance(scraped_result, dict) and "error" in scraped_result:
-        scraped_result["brand_name"] = url.split("//")[-1].split(".")[0].replace("www.", "").capitalize()
+        scraped_result["brand_name"] = extract_brand_from_url(url)
         scraped_result["claims_found"] = []
         return scraped_result
     

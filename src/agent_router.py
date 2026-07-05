@@ -14,6 +14,7 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 # To these (add 'src.' or '.' depending on your setup):
 from src.scraper_module import run_extraction_pipeline
 from src.scoring_engine import calculate_trust_score
+from src.utils import extract_brand_from_url, DB_PATH
 # ---------------------------------------------------------
 # 1. State & Tools
 # ---------------------------------------------------------
@@ -30,7 +31,7 @@ def query_federated_registry(category: str, brand_name: str) -> str:
     Categories: 'B-CORP', 'GOTS_ORGANIC', 'FSC_PACKAGING', 'VEGAN_PETA'
     """
     print(f"\n[DATABASE] Querying {category} for: {brand_name}...")
-    conn = sqlite3.connect('sustainability.db')
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     brand_query = f"%{brand_name.strip()}%"
     
@@ -61,7 +62,7 @@ def tavily_search_fallback(query: str):
     return search.invoke(query)
 
 tools = [query_federated_registry, tavily_search_fallback]
-model = ChatGroq(model="llama-3.1-8b-instant", temperature=0).bind_tools(tools)
+model = ChatGroq(model="gpt-oss-20b", temperature=0).bind_tools(tools)
 
 # ---------------------------------------------------------
 # 2. Agentic Nodes
@@ -157,7 +158,7 @@ def summary_node(state: AgentState):
     3. Output: Return ONLY the raw JSON. No markdown, no intro.
     """
     
-    response = ChatGroq(model="llama-3.1-8b-instant", temperature=0).invoke(
+    response = ChatGroq(model="gpt-oss-20b", temperature=0).invoke(
         state["messages"] + [HumanMessage(content=prompt)]
     )
     
@@ -200,7 +201,7 @@ if __name__ == "__main__":
     
     if "error" in extracted:
         print(f"⚠️ Scraper Alert: {extracted['error']}")
-        fallback_brand = url.split("://")[-1].split("/")[0].replace("www.", "").split(".")[0].capitalize()
+        fallback_brand = extract_brand_from_url(url)
         print(f"[*] Self-Healing: Triggering General Brand Audit for: {fallback_brand}")
         
         extracted = {

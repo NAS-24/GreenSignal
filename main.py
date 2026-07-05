@@ -8,6 +8,7 @@ from typing import Optional
 # Import your agent and scraper logic
 from src.scraper_module import run_extraction_pipeline
 from src.agent_router import app as langgraph_app
+from src.utils import extract_brand_from_url, DEFAULT_PORT
 
 app = FastAPI(title="Green Signal API")
 
@@ -33,7 +34,7 @@ async def perform_audit(request: AuditRequest):
     # Self-Healing: Handle scraper failures
     if "error" in extracted:
         # Extract brand name from URL if scraper hits a 500
-        brand = url.split("://")[-1].split("/")[0].replace("www.", "").split(".")[0].capitalize()
+        brand = extract_brand_from_url(url)
         extracted_data = {"brand_name": brand, "claims_found": []}
     else:
         brand = extracted["brand_name"]
@@ -64,4 +65,7 @@ async def perform_audit(request: AuditRequest):
 if __name__ == "__main__":
     import uvicorn
     # Local testing command: python main.py
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # DEFAULT_PORT respects the $PORT env var that most hosting platforms
+    # (Render, Railway, Heroku, Fly.io) inject automatically. Binding to a
+    # hardcoded port causes health checks to fail on these platforms.
+    uvicorn.run(app, host="0.0.0.0", port=DEFAULT_PORT)

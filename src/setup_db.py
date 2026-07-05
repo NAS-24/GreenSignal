@@ -2,12 +2,14 @@ import sqlite3
 import pandas as pd
 import os
 
+from src.utils import DB_PATH
+
 def build_federated_registry(bcorp_csv_path: str):
     """
     Builds a high-fidelity federated database. 
     Synchronizes official B-Corp CSV and pre-loads GOTS/FSC/Vegan truths.
     """
-    conn = sqlite3.connect('sustainability.db')
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
     # 1. Official B-Corp (Ingested from CSV)
@@ -78,5 +80,7 @@ def build_federated_registry(bcorp_csv_path: str):
     print("✅ Federated Databases and Dynamic Watchlist Synchronized.")
 
 if __name__ == "__main__":
-    # Ensure this matches your actual B-Corp CSV filename
-    build_federated_registry('b_corp_impact_data.csv')
+    # Path to the CSV can be overridden via env var; defaults to the
+    # filename actually shipped in this project (b_corp_data.csv).
+    csv_path = os.getenv("BCORP_CSV_PATH", "b_corp_data.csv")
+    build_federated_registry(csv_path)
